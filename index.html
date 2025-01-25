@@ -5,9 +5,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>React Valentine App</title>
     <link rel="stylesheet" href="./index.css" />
+    <style>
+      /* Password Overlay Styling */
+      #passwordOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        padding: 1rem;
+      }
+
+      #passwordOverlay h1 {
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
+
+      #passwordOverlay input {
+        padding: 0.8rem;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        width: 80%;
+        max-width: 320px;
+        text-align: center;
+      }
+
+      #passwordOverlay button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1.1rem;
+        background-color: #1e90ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      #passwordOverlay button:hover {
+        background-color: #4682b4;
+        transform: scale(1.1);
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        #passwordOverlay h1 {
+          font-size: 1.8rem;
+        }
+
+        #passwordOverlay input {
+          font-size: 1rem;
+        }
+
+        #passwordOverlay button {
+          font-size: 1rem;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="passwordOverlay">
+      <h1>Enter the Password to Travel the Universe</h1>
+      <input type="password" id="passwordInput" placeholder="Enter password" />
+      <button id="passwordButton">Submit</button>
+    </div>
+    <div id="root" style="display: none;"></div>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script>
@@ -15,144 +86,164 @@
       const { useState } = React;
 
       function App() {
-        const [isAuthenticated, setIsAuthenticated] = useState(false);
-        const [password, setPassword] = useState("");
         const [noCount, setNoCount] = useState(0);
         const [yesPressed, setYesPressed] = useState(false);
-        const yesButtonSize = noCount * 20 + 16;
+
+        // Local GIFs - Order can be updated here
+        const gifs = [
+          "./rose3.gif",
+          "./rose1.gif",
+          "./rose1.gif",
+          "./rose2.gif",
+          "./chocolate.gif",
+          "./cake.gif",
+          "./flower.gif",
+          "./guitar.gif",
+          "./emo2.gif",
+          "./emo.gif",
+          "./cry3.gif",
+          "./crying.gif",
+          "./cry2.gif",
+          "./please.gif",
+          "./please1.gif",
+          "./irritate.gif",
+          "./gcry.gif",
+          "./bear1.gif",
+          "./bear2.gif",
+          "./e.gif",
+          "./f1.gif",
+          "./f2.gif",
+    
+        ];
+
+        const phrases = [
+          "No", "Are you sure?", "What if I asked really nicely?", "Pretty please",
+          "With a melted chocolate?", "What about a cake?", "Okie Okie!!! How about a flower bouquet???", 
+          "Aaahhaaaaa Okie!!! Here's a song for you!", "PLEASE POOKIE  ", "But :*(  ", 
+          "I am going to cryyyy  ", "Yep im crying :(    ", "ok ur talking to crying Vardan now",
+          "please babe", ":(((","No :("
+        ];
 
         const handleNoClick = () => {
-          setNoCount(noCount + 1);
+          setNoCount((prev) => prev + 1);
         };
 
         const getNoButtonText = () => {
-          const phrases = [
-            "No", "Are you sure?", "What if I asked really nicely?", "Pretty please",
-            "With a melted chocolate", "What about a heart shape cake", "Okie Okie!!! How about a flower bouquet???",
-            "PLEASE POOKIE", "But :*(", "I am going to cryyyy", "Yep im crying :(", "ok ur talking to crying Vardan now",
-            "please babe", ":(((", "PRETTY PLEASE", "muauauauauauhahhh", "No :("
-          ];
-
           return phrases[Math.min(noCount, phrases.length - 1)];
         };
 
-        const handleLogin = () => {
-          if (password === "vrforever") {
-            setIsAuthenticated(true);
-          } else {
-            alert("Incorrect password!");
-          }
-        };
+        const currentGif = gifs[noCount % gifs.length];
+
+        // Dynamically increase Yes button size and move No button out of view
+        const yesButtonWidth = Math.min(150 + noCount * 5, 300); // Limit maximum width
+        const yesButtonHeight = Math.min(50 + noCount * 5, 150); // Limit maximum height
+        const noButtonOffset = Math.min(noCount * 7, 500); // Push "No" button off-screen
 
         return React.createElement(
           "div",
           { className: "h-screen w-screen flex items-center justify-center bg-cover bg-center" },
-          isAuthenticated
-            ? React.createElement(
-                "div",
-                { className: "-mt-16 flex h-screen flex-col items-center justify-center" },
-                yesPressed
-                  ? React.createElement(
-                      React.Fragment,
-                      null,
-                      React.createElement("img", {
-                        src: "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif",
-                      }),
-                      React.createElement(
-                        "div",
-                        { className: "translucent-box my-4 p-4 rounded-lg shadow-lg" },
-                        React.createElement(
-                          "div",
-                          {
-                            style: {
-                              color: "#B91C1C", // Red color
-                              fontSize: "2rem", // Font size
-                              fontWeight: "bold", // Bold font
-                              textAlign: "center", // Center alignment
-                              marginBottom: "1rem", // Spacing below
-                            },
-                          },
-                          "WOOOOOOHHHOOOO!!! I love you pookie!! ;))"
-                        )
-                      )
+          React.createElement(
+            "div",
+            { className: "flex flex-col items-center justify-center h-full p-4" },
+            yesPressed
+              ? React.createElement(
+                  React.Fragment,
+                  null,
+                  React.createElement("img", {
+                    src: "./kiss.gif",
+                    className: "max-w-full h-32 sm:h-48", // Responsive size
+                  }),
+                  React.createElement(
+                    "div",
+                    { className: "translucent-box my-4 p-4 rounded-lg shadow-lg" },
+                    React.createElement(
+                      "div",
+                      {
+                        style: {
+                          color: "#B91C1C",
+                          fontSize: "1.5rem",
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        },
+                      },
+                      "WOOOOOOHHHOOOO!!! I love you pookie!! ;))"
                     )
-                  : React.createElement(
-                      React.Fragment,
-                      null,
-                      React.createElement("img", {
-                        className: "h-[200px]",
-                        src: "https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif",
-                      }),
-                      React.createElement(
-                        "div",
-                        { className: "translucent-box my-4" },
-                        React.createElement(
-                          "h1",
-                          {
-                            style: {
-                              color: "#B91C1C", // Red color
-                              fontSize: "2rem", // Font size
-                              fontWeight: "bold", // Bold font
-                              textAlign: "center", // Center alignment
-                              marginBottom: "1rem", // Spacing below
-                            },
-                          },
-                          "Will you be my Valentine?"
-                        )
-                      ),
-                      React.createElement(
-                        "div",
-                        { className: "flex items-center" },
-                        React.createElement(
-                          "button",
-                          {
-                            className:
-                              "mr-4 rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700",
-                            style: { fontSize: yesButtonSize },
-                            onClick: () => setYesPressed(true),
-                          },
-                          "Yes"
-                        ),
-                        React.createElement(
-                          "button",
-                          {
-                            onClick: handleNoClick,
-                            className:
-                              "rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700",
-                          },
-                          noCount === 0 ? "No" : getNoButtonText()
-                        )
-                      )
-                    )
-              )
-            : React.createElement(
-                "div",
-                { className: "translucent-box p-8 rounded-lg shadow-lg" },
-                React.createElement(
-                  "h1",
-                  { className: "mb-6 text-3xl font-bold text-purple-700" },
-                  "Enter Password"
-                ),
-                React.createElement("input", {
-                  type: "password",
-                  className: "mb-6 w-full rounded border px-4 py-3 text-black text-lg",
-                  value: password,
-                  onChange: (e) => setPassword(e.target.value),
-                }),
-                React.createElement(
-                  "button",
-                  {
-                    onClick: handleLogin,
-                    className:
-                      "w-full rounded bg-gradient-to-r from-blue-500 to-indigo-600 px-4 py-3 text-lg font-bold text-white hover:from-indigo-600 hover:to-blue-500 shadow-lg hover:shadow-2xl",
-                  },
-                  "Submit"
+                  )
                 )
-              )
+              : React.createElement(
+                  React.Fragment,
+                  null,
+                  React.createElement("img", {
+                    className: "h-24 md:h-32 lg:h-48", // Adjusts gif size for mobile and desktop
+                    src: currentGif,
+                  }),
+                  React.createElement(
+                    "div",
+                    { className: "translucent-box my-4" },
+                    React.createElement(
+                      "h1",
+                      {
+                        style: {
+                          color: "#B91C1C",
+                          fontSize: "1.2rem", // Smaller text for mobile
+                          fontWeight: "bold",
+                          textAlign: "center",
+                        },
+                      },
+                      "Will you be my Valentine?"
+                    )
+                  ),
+                  React.createElement(
+                    "div",
+                    { className: "flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4" },
+                    React.createElement(
+                      "button",
+                      {
+                        className:
+                          "rounded bg-green-500 font-bold text-white hover:bg-green-700",
+                        style: {
+                          width: yesButtonWidth,
+                          height: yesButtonHeight,
+                          fontSize: "1.2rem",
+                        },
+                        onClick: () => setYesPressed(true),
+                      },
+                      "Yes"
+                    ),
+                    React.createElement(
+                      "button",
+                      {
+                        onClick: handleNoClick,
+                        className:
+                          "rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700",
+                        style: {
+                          transform: `translateX(${noButtonOffset}px)`,
+                        },
+                      },
+                      noCount === 0 ? "No" : getNoButtonText()
+                    )
+                  )
+                )
+          )
         );
       }
 
-      ReactDOM.render(React.createElement(App), document.getElementById("root"));
+      function startApp() {
+        ReactDOM.render(React.createElement(App), document.getElementById("root"));
+        document.getElementById("root").style.display = "flex"; // Display main app
+      }
+
+      function checkPassword() {
+        const password = document.getElementById("passwordInput").value;
+        if (password === "vrforever") {
+          document.getElementById("passwordOverlay").style.display = "none"; // Hide overlay
+          startApp(); // Start the app
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      }
+
+      document.getElementById("passwordButton").addEventListener("click", checkPassword);
     </script>
   </body>
 </html>
