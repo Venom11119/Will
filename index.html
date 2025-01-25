@@ -75,7 +75,7 @@
   <body>
     <div id="passwordOverlay">
       <h1>Enter the Password</h1>
-      <h3>Hint:Hum hai rahi pyaar ke</h3>
+      <h3>Hint:Hum hai rahi pyaar ke \\ fir milenge chalte...</h3>
       <input type="password" id="passwordInput" placeholder="Enter password" />
       <button id="passwordButton">Submit</button>
     </div>
@@ -236,7 +236,7 @@
 
       function checkPassword() {
         const password = document.getElementById("passwordInput").value;
-        if (password === "vrforever") {
+        if (password === "chalte") {
           document.getElementById("passwordOverlay").style.display = "none"; // Hide overlay
           startApp(); // Start the app
         } else {
